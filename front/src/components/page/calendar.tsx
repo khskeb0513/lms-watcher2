@@ -1,4 +1,3 @@
-import {Accordion, Card, Container, ListGroup} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import Common from "../common";
 import CalendarService from "../../service/calendarService";
@@ -13,7 +12,7 @@ const Calendar = () => {
     }, [])
     return (
         <>
-            {list.schoolCalendar.length === 0 ? <Common.RenewSession/> : <CalendarForm list={list.schoolCalendar} />}
+            {list.schoolCalendar.length === 0 ? <Common.RenewSession/> : <CalendarForm list={list.schoolCalendar}/>}
         </>
     )
 }
