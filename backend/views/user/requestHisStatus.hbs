@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<h1>
+  /user/requestHisStatus
+</h1>
+<h4>
+  주차 정보
+</h4>
+<ul>
+  <li>
+    item:
+    <span id="item">
+      {{item}}
+    </span>
+  </li>
+  <li>
+    seq:
+    <span id="seq">
+      {{seq}}
+    </span>
+  </li>
+  <li>
+    kjKey:
+    <span id="kjKey">
+      {{kjKey}}
+    </span>
+  </li>
+</ul>
+<h4>
+  his 정보
+</h4>
+<ul>
+  <li>
+    hisCode:
+    <span id="hisCode">
+      {{his/hisCode}}
+    </span>
+  </li>
+  <li>
+    timestamp:
+    <span id="timestamp">
+      {{his/timestamp}}
+    </span>
+    <span id="locale">
+    </span>
+  </li>
+</ul>
+<h4>
+  his 코드 제어
+</h4>
+<ul>
+  <li>
+    <button onclick="requestHis('{{item}}', '{{seq}}', '{{kjKey}}', '{{his/hisCode}}')">
+      send request
+    </button>
+    status:
+    <span id="status"></span>
+  </li>
+  <br>
+  <li>
+    <button onclick="issueHis('{{item}}', '{{seq}}', '{{kjKey}}')">
+      reissue his code
+    </button>
+  </li>
+</ul>
+<script>
+  document.querySelector("#locale").innerHTML = new Date({{his/timestamp}}).toLocaleString();
+  const requestHis = (item, seq, kjKey, his) => {
+    fetch(`/api/schedule/requestHisStatus?item=${item}&seq=${seq}&kjKey=${kjKey}&his=${his}`).then(async r => {
+      document.querySelector("#status").innerHTML = await r.text();
+    });
+  };
+  const issueHis = (item, seq, kjKey) => {
+    fetch(`/api/schedule/issueHis?item=${item}&seq=${seq}&kjKey=${kjKey}`).then(async r => {
+      if (r.ok) {
+        window.location.reload();
+      } else {
+        alert(await r.text());
+      }
+    });
+  };
+</script>
+</body>
+</html>

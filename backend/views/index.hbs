@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<h1>
+  Welcome to learning management system watcher.
+</h1>
+<hr>
+<h3>
+  account data
+</h3>
+<ul>
+  <li>
+    username:
+    {{#if username}}
+      {{username}}
+    {{else}}
+      <a href="/user/setBrowserLoginSession">setBrowserLoginSession</a>
+    {{/if}}
+  </li>
+</ul>
+<hr>
+<h3>
+  /user
+</h3>
+<ul>
+  <li>
+    Do not use functions in parallel.
+  </li>
+  <br>
+  <li>
+    <a href="/user/setBrowserLoginSession">/user/setBrowserLoginSession</a>
+  </li>
+  <li>
+    <a href="/user/getCalendar">/user/getCalendar</a>
+  </li>
+  <li>
+    <a href="/user/getEClassCalendar">/user/getEClassCalendar</a>
+  </li>
+  <!--  <li>-->
+  <!--    <a href="/user/getReportcalendar">/user/getReportCalendar</a>-->
+  <!--  </li>-->
+  <!--  <li>-->
+  <!--    <a href="/user/getIncompleteReport">/user/getIncompleteReport</a>-->
+  <!--  </li>-->
+  <li>
+    <a href="/user/getSchedule">/user/getSchedule</a>
+  </li>
+  <li>
+    <a href="/user/getIncompleteSchedule">/user/getIncompleteSchedule</a>
+  </li>
+</ul>
+<h3>
+  /api/user
+</h3>
+<ul>
+  <li>
+    <a href="/api/user/getSessionValue">
+      /api/user/getSessionValue
+    </a>
+  </li>
+</ul>
+</body>
+</html>

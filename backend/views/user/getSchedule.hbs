@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<h1>
+  /user/getSchedule
+</h1>
+<p>
+  ==================================================
+  <br>
+  course title || course id
+  <br>
+  ====================
+  <br>
+  name
+  <br>
+  seq || item || edDt || percent ( progress string )
+  <br>
+  ==========
+  <br>
+  ====================
+  <br>
+  ==================================================
+</p>
+{{#each courses}}
+  <p>
+    ==================================================
+    <br>
+    {{title}} || {{id}}
+    {{#if incomplete}}
+      <br>
+      ====================
+      {{#each incomplete}}
+        <br>
+        <span id="content-{{item}}">
+          {{name}}
+        </span>
+        <br>
+        {{seq}} || {{item}} || {{edDt}} || {{percent}} ( {{progressStr}} )
+        <br>
+        <a href="#content-{{item}}" onclick="getHis('{{item}}', '{{seq}}', '{{kjKey}}')">hisCode:</a>
+        <span id="his-{{item}}"></span>
+        <br>
+        <a href="#content-{{item}}" onclick="getCid('{{item}}', '{{seq}}', '{{kjKey}}', '{{name}}')">contentId:</a>
+        <span id="cid-{{item}}"></span>
+        <br>
+        ==========
+      {{/each}}
+      <br>
+      ====================
+    {{/if}}
+    <br>
+    ==================================================
+  </p>
+{{/each}}
+<script>
+  const getHis = (item, seq, kjKey) => {
+    fetch(`/api/schedule/getHisCode?item=${item}&seq=${seq}&kjKey=${kjKey}`).then(async r => {
+      const text = await r.json();
+      document.querySelector(`#his-${item}`).innerHTML =
+        `<a href="/user/requestHisStatus?item=${item}&seq=${seq}&kjKey=${kjKey}">${text["hisCode"]} (timestamp: ${text["timestamp"]})</a>`;
+    }).catch(async e => {
+      alert(e);
+    });
+  };
+  const getCid = (item, seq, kjKey, name) => {
+    fetch(`/api/schedule/getVideo?item=${item}&seq=${seq}&kjKey=${kjKey}`).then(async r => {
+      const text = await r.json();
+      document.querySelector(`#cid-${item}`).innerHTML =
+        `<a href="https://pknu.commonscdn.com/contents5/pknu100001/${text["cid"]}/contents/media_files/mobile/ssmovie.mp4" download="${kjKey}-${name}.mp4">${text["cid"]} (contentId: ${text["contentId"]})</a>`;
+    }).catch(async e => {
+      alert(e);
+    });
+  };
+</script>
+</body>
+</html>

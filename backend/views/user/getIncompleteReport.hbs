@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<h1>
+  /user/getIncompleteReport
+</h1>
+<ul>
+  {{#each courses}}
+    <li>
+      과목명: {{title}}
+    </li>
+    <li>
+      <a href="https://lms.pknu.ac.kr/ilos/st/course/eclass_room2.acl?KJKEY={{id}}" target="_blank">
+      과목코드: {{id}}
+      </a>
+    </li>
+    <li>
+      미완과제
+      <ul>
+        {{#each incomplete}}
+          <li>
+            reportName: {{reportName}}
+            </a>
+            <ul>
+              <li>
+                submitStatus: {{submitStatus}}
+              </li>
+              <li>
+                submitDate: {{submitDate}}
+              </li>
+              <li>
+                myScore: {{myScore}}
+              </li>
+              <li>
+                setScore: {{setScore}}
+              </li>
+            </ul>
+          </li>
+        {{/each}}
+        {{^incomplete}}
+          <li>
+            null
+          </li>
+        {{/incomplete}}
+      </ul>
+    </li>
+    <hr>
+  {{/each}}
+</ul>
+</body>
+</html>

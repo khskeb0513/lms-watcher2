@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<h2>
+  /user/setBrowserLoginSession
+</h2>
+<hr>
+<h3>
+  with Login
+</h3>
+<p>
+  <label for="username">
+    Username
+    <input type="text" id="username">
+  </label>
+</p>
+<p>
+  <label for="password">
+    Password
+    <input type="password" id="password">
+  </label>
+</p>
+<p>
+  <button onclick="checkUserInformation()">submit</button>
+</p>
+<hr>
+<h3>
+  with Cookie String
+</h3>
+<p>
+  <label for="cookieStr">
+    Cookie String
+    <input type="text" id="cookieStr">
+  </label>
+</p>
+<p>
+  <button onclick="checkCookieInformation()">submit</button>
+</p>
+<h3>
+  renew Session
+</h3>
+<p>
+  <button onclick="renewSession()">renew</button>
+</p>
+<script>
+  const renewSession = () => {
+    fetch("/api/user/renewSession", {
+      method: "get"
+    }).then(async r => {
+      const body = await r.json()
+      if (body['set']) {
+        alert('session renewed')
+        window.location.href = '/'
+      } else {
+        alert('invalid user data, re-login required.')
+      }
+    });
+  }
+
+  const checkCookieInformation = () => {
+    const cookieStr = document.querySelector("input#cookieStr").value;
+    fetch("/api/user/setSessionValue", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ cookieStr })
+    }).then(async r => {
+      const body = await r.json()
+      if (body['set']) {
+        window.location.href = '/'
+      } else {
+        alert('invalid cookie string.')
+      }
+    });
+  };
+  const checkUserInformation = () => {
+    const user = {
+      username: document.querySelector("input#username").value,
+      password: document.querySelector("input#password").value
+    };
+    fetch("/api/user/isUser", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(user)
+    }).then(async r => {
+      const body = await r.json();
+      if (body["isUser"]) {
+        window.location.href = "/";
+      } else {
+        alert("cannot found any user in lms.");
+      }
+    });
+  };
+</script>
+</body>
+</html>
