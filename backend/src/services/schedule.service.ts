@@ -33,15 +33,10 @@ export class ScheduleService {
       }
     ) : null;
     const $ = cheerio.load(body.body);
-    const percentArr = $("div#per_text")
-      .toArray()
-      .map((v) => {
-        return { percent: $(v).html(), progressStr: $($(v).parent().children()[2]).html() };
-      });
     let scheduleArr = $("span.site-mouseover-color")
       .toArray()
       .map((v) => {
-        const name = $(v).html();
+        const progress = $($(v).parent().parent().parent().children('div').toArray()[1])
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const viewGo = (
           week: string,
@@ -54,35 +49,21 @@ export class ScheduleService {
             seq: Number(seq),
             edDt: edDt,
             today: today,
-            name,
+            name: $(v).html(),
             item: item,
+            percent: progress.children('div#per_text').html(),
+            progressStr: $(progress.children('div').toArray()[2]).html(),
             kjKey: id
           };
         };
         return eval($(v).attr()["onclick"]);
       });
-    for (const key in percentArr) {
-      if (!!scheduleArr[key])
-        scheduleArr[key] = {
-          ...scheduleArr[key],
-          percent: percentArr[key].percent,
-          progressStr: percentArr[key].progressStr
-        };
-    }
     scheduleArr = id ? scheduleArr.map((v) => {
       return {
         ...v,
         edDt: this.commonService
           .dateParser(v.edDt)
-          .format("YYYY년 MM월 DD일 HH:mm:ss"),
-        d1:
-          this.commonService
-            .dateParser(v.edDt)
-            .diff(this.commonService.dateParser(v.today).add(1, "d")) < 0,
-        d2:
-          this.commonService
-            .dateParser(v.edDt)
-            .diff(this.commonService.dateParser(v.today).add(2, "d")) < 0
+          .format("YYYY년 MM월 DD일 HH:mm:ss")
       };
     }) : [];
     return scheduleArr;
