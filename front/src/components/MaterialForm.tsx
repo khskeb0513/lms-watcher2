@@ -28,7 +28,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({list, modal, setModal, board
                     <h6>첨부파일</h6>
                     <ul>
                         {r.attachment.map(value => (<li>
-                            <small onClick={() => fileDownload(value.fileUrl)}>
+                            <small onClick={() => fileDownload(value.fileUrl, v.id)}>
                                 {value.name.substring(2, value.name.length)}
                             </small>
                         </li>))}
@@ -37,9 +37,14 @@ const MaterialForm: React.FC<MaterialFormProps> = ({list, modal, setModal, board
             )
         }))
     }
-    const fileDownload = (url: string) => {
-        if (window.confirm('LMS 페이지에 로그인 된 세션을 가진 브라우저를 이용하십시오.')) {
+    const fileDownload = (url: string, kjKey: string) => {
+        if (window.confirm('' +
+            'LMS 페이지에 로그인 되었으며, 과목 접근 가능한 브라우저를 사용하십시오.\n' +
+            '확실하지 않으면 접근권한을 부여하기 위해 취소를 선택하십시오.'
+        )) {
             window.open(`https://lms.pknu.ac.kr${url}`)
+        } else {
+            window.open(`https://lms.pknu.ac.kr/ilos/st/course/eclass_room2.acl?KJKEY=${kjKey}`)
         }
     }
     return (
