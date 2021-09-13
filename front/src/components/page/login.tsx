@@ -1,6 +1,6 @@
 import {Button, Container, Form} from "react-bootstrap"
 import Common from "../common"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import AuthService from "../../service/authService";
 
 const authService = new AuthService()
@@ -22,6 +22,12 @@ const Login = () => {
             alert('error! check user information')
         }
     })
+    useEffect(() => {
+        if (process.env.REACT_APP_ENV === 'development') authService.getSessionFromEnv().then(r => {
+            if (r) window.location.href = '/'
+            else alert('error! check user information')
+        })
+    }, [])
     return (
         <>
             <Container>
@@ -29,7 +35,7 @@ const Login = () => {
                 <div className={'row'}>
                     <div className={'col'}>
                         <h4>
-                            Username Login
+                            Username login
                         </h4>
                         <Form className={'mt-4'}>
                             <Form.Group className="mb-3">
@@ -51,7 +57,7 @@ const Login = () => {
                         <Form className={'mt-4'}>
                             <Form.Group className="mb-3">
                                 <Form.Control onChange={e => setCookieStr(e.target.value)} type="text"
-                                              placeholder="Cookie String"/>
+                                              placeholder="JSESSIONID=..."/>
                             </Form.Group>
                             <Button variant="primary" type="button" onClick={setSessionValue}>
                                 Submit

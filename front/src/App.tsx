@@ -1,38 +1,35 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import MyNavbar from "./components/myNavbar";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
-import Login from "./components/page/login";
 import AuthService from "./service/authService";
-import Account from "./components/page/account";
 import Index from './components/page';
 import User from "./components/page/user";
 import Common from './components/common';
 import {Offcanvas} from "react-bootstrap";
+import Auth from "./components/page/auth";
 
 const authService = new AuthService()
 const App = () => {
-    const [username, setUsername] = useState('')
+    const [promiseUsername] = useState(authService.getUsername)
     const [modal, setModal] = useState({
         show: false,
-        title: 'modal',
-        body: (<span>body</span>)
+        title: '',
+        body: (<></>)
     })
-    useEffect(() => {
-        authService.getUsername().then(r => {
-            setUsername(r)
-        })
-    }, [])
     return (
         <>
-            <MyNavbar username={username}/>
+            <MyNavbar promiseUsername={promiseUsername}/>
             <BrowserRouter>
                 <Switch>
+                    {/*
+                    /user, /auth, index
+                    */}
                     <Route path={'/user'}>
-                        <User modal={modal} setModal={setModal}/>
+                        <User modal={modal} setModal={setModal} promiseUsername={promiseUsername}/>
                     </Route>
                     <Route path={'/auth'}>
-                        {username ? <Account/> : <Login/>}
+                        <Auth promiseUsername={promiseUsername}/>
                     </Route>
                     <Route>
                         <Index/>
@@ -43,7 +40,9 @@ const App = () => {
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>{modal.title}</Offcanvas.Title>
                 </Offcanvas.Header>
-                <Offcanvas.Body>{modal.body}</Offcanvas.Body>
+                <Offcanvas.Body>
+                    <div style={{wordBreak: "break-all"}}>{modal.body}</div>
+                </Offcanvas.Body>
             </Offcanvas>
             <Common.Blank/>
         </>

@@ -26,7 +26,7 @@ const CalendarForm:React.FC<CalendarFormProps> = ({list}) => {
                                 <Accordion.Header>
                                         <span
                                             style={{
-                                                color: !v.detail.name || !v.detail.status ? "black" : "navy",
+                                                color: !v.detail.name || !v.detail.status ? "black" : (v.detail.status === '제출' ? 'navy' : 'indianred'),
                                                 fontWeight: !v.detail.name || !v.detail.status ? "normal" : "bold"
                                             }}
                                         >

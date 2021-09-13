@@ -1,28 +1,20 @@
-import { Injectable } from "@nestjs/common";
+import {forwardRef, Inject, Injectable} from "@nestjs/common";
 import got from "got";
 import * as cheerio from "cheerio";
 import { SessionService } from "./session.service";
 import { CommonService } from "./common.service";
 import { DatabaseService } from "./database.service";
+import {UserService} from "./user.service";
 
 @Injectable()
 export class ScheduleService {
   constructor(
     private readonly sessionService: SessionService,
     private readonly commonService: CommonService,
-    private readonly databaseService: DatabaseService
+    private readonly databaseService: DatabaseService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService
   ) {
-  }
-
-  private async getUsername(cookie: string) {
-    const response = await got.get("https://lms.pknu.ac.kr/ilos/mp/myinfo_form.acl", {
-      headers: {
-        cookie
-      }
-    });
-    const $ = cheerio.load(response.body);
-    const str = $("#uploadForm > div:nth-child(5) > table > tbody > tr:nth-child(1) > td:nth-child(2)").html();
-    return str ? str.slice(str.indexOf("(") + 1, str.length - 1) : null;
   }
 
   public async getByEClassId(id: string, cookie: string) {
@@ -83,7 +75,7 @@ export class ScheduleService {
     kjKey: string,
     cookie: string
   ) {
-    const ud = await this.getUsername(cookie);
+    const ud = await this.userService.getUsername(cookie);
     const seq = (await this.getVideo(kjKey, week, item, cookie))["link_seq"];
     await got.post("https://lms.pknu.ac.kr/ilos/st/course/online_view_at.acl", {
       headers: { cookie },
@@ -144,7 +136,7 @@ export class ScheduleService {
           navi: "current",
           item_id: itemId,
           ky: kjKey,
-          ud: await this.getUsername(cookie),
+          ud: await this.userService.getUsername(cookie),
           returnData: "json",
           encoding: "utf-8"
         }

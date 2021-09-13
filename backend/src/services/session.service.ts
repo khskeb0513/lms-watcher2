@@ -42,4 +42,8 @@ export class SessionService {
     });
     return request.statusCode
   }
+
+  public getSessionFromEnv() {
+    return process.env['COOKIE_STR']
+  }
 }

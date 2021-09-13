@@ -1,11 +1,15 @@
 import {Button, Container, Nav, Navbar} from "react-bootstrap"
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 interface MyNavbarProps {
-    username: string | null
+    promiseUsername: Promise<string>
 }
 
-const MyNavbar: React.FC<MyNavbarProps> = ({username}) => {
+const MyNavbar: React.FC<MyNavbarProps> = ({promiseUsername}) => {
+    const [username, setUsername] = useState('')
+    useEffect(() => {
+        promiseUsername.then(r => setUsername(r))
+    }, [promiseUsername])
     return (
         <>
             <Navbar bg="dark" variant="dark" expand={"md"}>
@@ -18,6 +22,7 @@ const MyNavbar: React.FC<MyNavbarProps> = ({username}) => {
                         <Nav className="me-auto">
                             <Nav.Link href="/user/schedule">Schedule</Nav.Link>
                             <Nav.Link href="/user/calendar">Calendar</Nav.Link>
+                            <Nav.Link href="/user/board">ClassBoard</Nav.Link>
                         </Nav>
                         <Nav>
                             <Button variant={"outline-light"} size={"sm"} href={'/auth'}>

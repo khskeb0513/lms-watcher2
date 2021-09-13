@@ -51,6 +51,9 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({getSchedule, setModal, modal
                         image: '/logo512.png',
                         icon: '/logo512.png'
                     })
+                    notification.onshow = () => {
+                        new Audio('/notification.ogg').play()
+                    }
                     notification.onclick = async () => {
                         makeModal(await scheduleService.getHisCode(v.kjKey, v.seq, v.item))
                         notification.close()
@@ -59,7 +62,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({getSchedule, setModal, modal
             }
         })
         const reissueHisResponse = () => {
-            scheduleService.reissueHis(v.kjKey, v.seq, v.item).then(async r => {
+            scheduleService.reissueHis(v.kjKey, v.seq, v.item).then(async () => {
                 makeModal(await scheduleService.getHisCode(v.kjKey, v.seq, v.item))
             })
         }
@@ -110,12 +113,14 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({getSchedule, setModal, modal
                     <Card>
                         <Card.Body>
                             <Card.Title>{v.title}</Card.Title>
-                            <Card.Text>{v.id}</Card.Text>
+                            <Card.Text><span className={'text-muted'}>{v.id}</span></Card.Text>
                         </Card.Body>
                         <Accordion flush>
                             {v.incomplete.map((v, i) => (
                                 <Accordion.Item eventKey={i.toString()}>
-                                    <Accordion.Header>[{v.seq}] {v.name}</Accordion.Header>
+                                    <Accordion.Header>
+                                        [{v.seq}] {v.name}
+                                    </Accordion.Header>
                                     <Accordion.Body>
                                         <ListGroup variant={"flush"}>
                                             <ListGroup.Item>End date: {v.edDt}</ListGroup.Item>

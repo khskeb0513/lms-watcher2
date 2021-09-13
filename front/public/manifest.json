@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "LMS Watcher",
+  "name": "Get info from LMS",
   "icons": [
     {
       "src": "favicon.ico",

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { EClassService } from "./eClass.service";
 import { ScheduleService } from "./schedule.service";
 import { ReportService } from "./report.service";
@@ -16,8 +16,10 @@ export class UserService {
     private readonly eClassService: EClassService,
     private readonly reportService: ReportService,
     private readonly calendarService: CalendarService,
+    @Inject(forwardRef(() => ScheduleService))
     private readonly scheduleService: ScheduleService,
     private readonly databaseService: DatabaseService,
+    @Inject(forwardRef(() => BoardService))
     private readonly boardService: BoardService
   ) {
   }

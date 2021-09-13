@@ -4,9 +4,15 @@ import GetSessionValueDto from "../domain/auth/getSessionValueDto";
 import SetSessionValueDto from "../domain/auth/setSessionValueDto";
 
 class AuthService {
-    async getUsername() {
+    async getSessionFromEnv():Promise<boolean> {
+        const response = await fetch('/api/user/getSessionFromEnv')
+        const body = await response.json()
+        return body.status
+    }
+
+    async getUsername(): Promise<string> {
         const response = await fetch('/api/user/getUsername')
-        return response.json()
+        return response.text()
     }
 
     async isUser(username: string, password: string): Promise<IsUserDto> {
