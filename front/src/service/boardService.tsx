@@ -6,7 +6,7 @@ interface MaterialAttachment {
     name: string
 }
 
-interface GetMaterialBodyInterface {
+interface GetBodyInterface {
     body: string
     attachment: MaterialAttachment[]
 }
@@ -18,9 +18,18 @@ class BoardService {
         return new GetMaterialListDto(body.filter(v => v.board.length !== 0))
     }
 
-    async getMaterialBody(id: string, url: string, attachmentId: string): Promise<GetMaterialBodyInterface> {
+    async getNoticeList(): Promise<GetMaterialListDto> {
+        const response = await fetch('/api/user/getNoticeList')
+        const body: GetMaterialListProps[] = await response.json()
+        return new GetMaterialListDto(body.filter(v => v.board.length !== 0))
+    }
+
+    async getBody(id: string, url: string, attachmentId: string): Promise<GetBodyInterface> {
         const response = await fetch(
-            `/api/board/getMaterialBody?id=${id}&url=${url}&attachmentId=${attachmentId}`)
+            attachmentId ?
+                `/api/board/getBody?id=${id}&url=${url}&attachmentId=${attachmentId}` :
+                `/api/board/getBody?id=${id}&url=${url}`
+        )
         return response.json()
     }
 }

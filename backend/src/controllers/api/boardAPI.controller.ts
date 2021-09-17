@@ -8,14 +8,22 @@ export class BoardAPIController {
     ) {
     }
 
-    @Get('/getMaterialBody')
-    public async getMaterialBody(
+    @Get('/getBody')
+    public async getBody(
         @Query('id') id: string,
         @Query('url') url: string,
         @Query('attachmentId') attachmentId: string,
         @Session() session: Record<string, any>
     ) {
-      return this.boardService.getMaterialBody(id, url, attachmentId, session.cookieStr)
+        return this.boardService.getBody(id, url, attachmentId, session.cookieStr)
+    }
+
+    @Get('/getNoticeListByEClassId')
+    public async getNoticeListByEClassId(
+        @Query("id") id: string,
+        @Session() session: Record<string, any>
+    ) {
+        return this.boardService.getNoticeListByEClassId(id, session.cookieStr);
     }
 
     @Get('/getMaterialListByEClassId')

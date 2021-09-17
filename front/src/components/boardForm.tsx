@@ -1,23 +1,24 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {Card, Container, ListGroup} from "react-bootstrap";
+import {Badge, Card, Container, ListGroup} from "react-bootstrap";
 import Common from "./common";
 import GetMaterialListProps, {Board} from "../domain/board/getMaterialListProps";
 import BoardService from "../service/boardService";
+import {GetMaterialListWithTypeProps} from "../domain/board/getMaterialListWithTypeDto";
 
-interface MaterialFormProps {
-    list: GetMaterialListProps[],
+interface BoardFormProps {
+    list: GetMaterialListWithTypeProps[],
     modal: any,
     setModal: Dispatch<SetStateAction<any>>,
     boardService: BoardService
 }
 
-const MaterialForm: React.FC<MaterialFormProps> = ({list, modal, setModal, boardService}) => {
+const BoardForm: React.FC<BoardFormProps> = ({list, modal, setModal, boardService}) => {
     const [lastUpdated, setLastUpdated] = useState('')
     useEffect(() => {
         setLastUpdated(new Date().toLocaleString())
     }, [])
     const showModal = (material: Board, v: GetMaterialListProps) => {
-        boardService.getMaterialBody(v.id, material.url, material.attachmentId).then(r => setModal({
+        boardService.getBody(v.id, material.url, material.attachmentId).then(r => setModal({
             ...modal, show: true, title: v.title, body: (
                 <>
                     <h5>{material.detail.title}</h5>
@@ -50,7 +51,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({list, modal, setModal, board
     return (
         <Container>
             <Common.Blank/>
-            <Card border={"primary"}>
+            <Card border={"dark"}>
                 <Card.Header>
                     Class Board
                 </Card.Header>
@@ -61,16 +62,20 @@ const MaterialForm: React.FC<MaterialFormProps> = ({list, modal, setModal, board
             <Common.Blank/>
             {list.map((v) => (
                 <>
-                    <Card>
+                    <Card border={'dark'}>
                         <Card.Body>
                             <Card.Title>{v.title}</Card.Title>
                             <Card.Text><span className={'text-muted'}>{v.id}</span></Card.Text>
                         </Card.Body>
                         <ListGroup variant="flush">
                             {v.board.map((material, i) => {
+                                const type = material.type === 'material'
                                 return (
                                     <ListGroup.Item eventKey={i.toString()} action={true}
                                                     onClick={() => showModal(material, v)}>
+                                        <Badge className={'me-2'} pill bg={type ? 'success' : 'primary'}>
+                                            {type ? '강의자료' : '공지사항'}
+                                        </Badge>
                                         {material.detail.title}
                                     </ListGroup.Item>
                                 )
@@ -85,4 +90,4 @@ const MaterialForm: React.FC<MaterialFormProps> = ({list, modal, setModal, board
     )
 }
 
-export default MaterialForm
+export default BoardForm
