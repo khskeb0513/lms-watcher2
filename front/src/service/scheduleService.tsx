@@ -1,17 +1,23 @@
 import GetScheduleDto from "../domain/schedule/getScheduleDto";
 import GetVideoDto from "../domain/schedule/getVideoDto";
 import GetHisCodeDto from "../domain/schedule/getHisCodeDto";
+import GetAttendanceListDto, {GetAttendance} from "../domain/schedule/getAttendanceListDto";
 
 class ScheduleService {
+    async getAttendanceList(): Promise<GetAttendanceListDto> {
+        const response = await fetch('/api/user/getAttendanceList')
+        const body: GetAttendance[] = await response.json()
+        return new GetAttendanceListDto(body.filter(v => v.attendance.length !== 0))
+    }
+
     async getSchedule(): Promise<GetScheduleDto> {
         const response = await fetch('/api/user/getSchedule')
         const body = await response.json()
         return new GetScheduleDto(body.courses)
     }
 
-    async getIncompleteSchedule(): Promise<GetScheduleDto> {
-        const response = await this.getSchedule()
-        return new GetScheduleDto(response.courses.map(v => ({
+    async getIncompleteSchedule(getScheduleDto: GetScheduleDto): Promise<GetScheduleDto> {
+        return new GetScheduleDto(getScheduleDto.courses.map(v => ({
             ...v, incomplete: v.incomplete.filter(v => v.percent !== '100%')
         })).filter(v => v.incomplete.length !== 0))
     }

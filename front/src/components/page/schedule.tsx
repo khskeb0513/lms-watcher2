@@ -11,17 +11,49 @@ interface ScheduleProps {
     modal: any,
     setModal: Dispatch<SetStateAction<any>>
 }
+
 const Schedule: React.FC<ScheduleProps> = ({setModal, modal}) => {
-    const [list, setList] = useState(new GetScheduleDto([]))
+    const [getScheduleDto, setGetScheduleDto] = useState(new GetScheduleDto([]))
+    const [list, setList] = useState(getScheduleDto)
+    const [showIncomplete, setShowIncomplete] = useState(true)
     useEffect(() => {
-        scheduleService.getIncompleteSchedule().then(r => {
-            return setList(r);
+        scheduleService.getSchedule().then(r => {
+            setGetScheduleDto(r)
+            scheduleService.getIncompleteSchedule(r).then(r => {
+                setList(r)
+            })
         })
     }, [])
+    const toggleIncomplete = () => {
+        if (!showIncomplete) {
+            scheduleService.getIncompleteSchedule(getScheduleDto).then(r => {
+                setList(r)
+            })
+        } else {
+            setList(getScheduleDto)
+        }
+        setShowIncomplete(!showIncomplete)
+    }
+    const requestGetSchedule = () => {
+        scheduleService.getSchedule().then(r => {
+            setGetScheduleDto(r)
+            if (showIncomplete) {
+                scheduleService.getIncompleteSchedule(getScheduleDto).then(r => {
+                    setList(r)
+                })
+            } else {
+                setList(getScheduleDto)
+            }
+        })
+    }
     return (
         <Container>
             <Common.Blank/>
-            {list.courses.length === 0 ? <Common.RenewSession/> : <ScheduleForm modal={modal} setModal={setModal}  getSchedule={list}/>}
+            {list.courses.length === 0 ?
+                <Common.RenewSession/> :
+                <ScheduleForm showIncomplete={showIncomplete} toggleIncomplete={toggleIncomplete}
+                              requestGetSchedule={requestGetSchedule} modal={modal} setModal={setModal}
+                              getSchedule={list}/>}
         </Container>
     )
 }

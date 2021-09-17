@@ -11,6 +11,11 @@ export class UserAPIController {
     ) {
     }
 
+    @Get('/getAttendanceList')
+    public async getAttendanceList(@Session() session: Record<string, any>) {
+        return this.userService.getAttendanceList(session.cookieStr)
+    }
+
     @Get('/getSessionFromEnv')
     public async getSessionFromEnv(@Session() session: Record<string, any>) {
         const cookie = this.sessionService.getSessionFromEnv()
@@ -30,6 +35,11 @@ export class UserAPIController {
         session.password = null;
         session.cookieStr = null;
         return true;
+    }
+
+    @Get("/getNoticeList")
+    public async getNoticeList(@Session() session: Record<string, any>) {
+        return this.userService.getNoticeList(session.cookieStr);
     }
 
     @Get("/getMaterialList")

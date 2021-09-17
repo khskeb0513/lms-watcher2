@@ -15,12 +15,13 @@ const MyNavbar: React.FC<MyNavbarProps> = ({promiseUsername}) => {
             <Navbar bg="dark" variant="dark" expand={"md"}>
                 <Container>
                     <Navbar.Brand href="/">
-                        LMS Watcher
+                        {process.env.REACT_APP_ENV === 'development' ? 'study1' : 'LMS Watcher'}
                     </Navbar.Brand>
                     <Navbar.Toggle/>
                     <Navbar.Collapse>
                         <Nav className="me-auto">
                             <Nav.Link href="/user/schedule">Schedule</Nav.Link>
+                            <Nav.Link href="/user/attendance">Attendance</Nav.Link>
                             <Nav.Link href="/user/calendar">Calendar</Nav.Link>
                             <Nav.Link href="/user/board">ClassBoard</Nav.Link>
                         </Nav>

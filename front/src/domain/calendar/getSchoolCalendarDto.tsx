@@ -1,11 +1,21 @@
-import SchoolCalendar from "./calendarInterface"
+interface Detail {
+    status: string | null
+    name: string | null
+}
 
-class GetSchoolCalendarDto {
+export interface SchoolCalendar {
+    title: string
+    searchDate: string
+    startDate: string
+    endDate: string
+    detail: Detail
+}
+
+
+export default class GetSchoolCalendarDto {
     constructor(schoolCalendar: SchoolCalendar[]) {
         this.schoolCalendar = schoolCalendar
     }
 
     schoolCalendar: SchoolCalendar[]
 }
-
-export default GetSchoolCalendarDto

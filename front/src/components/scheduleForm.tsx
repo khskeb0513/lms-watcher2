@@ -1,6 +1,6 @@
 import GetScheduleDto from "../domain/schedule/getScheduleDto";
 import React, {Dispatch, SetStateAction, useState} from "react";
-import {Accordion, Button, Card, ListGroup} from "react-bootstrap";
+import {Accordion, Badge, Button, ButtonGroup, Card, FormControl, InputGroup, ListGroup} from "react-bootstrap";
 import Common from "./common";
 import ScheduleService from "../service/scheduleService";
 import ScheduleInterface from "../domain/schedule/scheduleInterface";
@@ -10,16 +10,27 @@ import notificationIcon from '../notifications_active_black_24dp.svg'
 interface ScheduleFormProps {
     getSchedule: GetScheduleDto,
     modal: any,
-    setModal: Dispatch<SetStateAction<any>>
+    setModal: Dispatch<SetStateAction<any>>,
+    toggleIncomplete: () => void,
+    requestGetSchedule: () => void,
+    showIncomplete: boolean
 }
 
 const scheduleService = new ScheduleService()
-const ScheduleForm: React.FC<ScheduleFormProps> = ({getSchedule, setModal, modal}) => {
+const ScheduleForm: React.FC<ScheduleFormProps> = ({
+                                                       getSchedule,
+                                                       setModal,
+                                                       modal,
+                                                       requestGetSchedule,
+                                                       toggleIncomplete,
+                                                       showIncomplete
+                                                   }) => {
     const [lastUpdated] = useState(new Date().toLocaleString())
     const showHisModal = async (v: ScheduleInterface) => {
         const videoResponse = await scheduleService.getVideo(v.kjKey, v.seq, v.item)
         const requestHisStatus = (his: number) => {
             scheduleService.requestHisStatus(v.kjKey, v.seq, v.item, his).then(responseCode => {
+                if (responseCode === 200) requestGetSchedule()
                 Notification.requestPermission().then(permission => {
                     if (permission === 'granted') {
                         const notification = new Notification(v.name, {
@@ -77,10 +88,12 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({getSchedule, setModal, modal
                         EClassID: {v.kjKey}<br/>
                         View state: {v.progressStr} ({v.percent})
                     </ListGroup.Item>
-                    <ListGroup.Item>
-                        <a href={`https://pknu.commonscdn.com/contents5/pknu100001/${videoResponse.cid}/contents/media_files/mobile/ssmovie.mp4`}>
-                            Get Content Video ({videoResponse.cid})
-                        </a>
+                    <ListGroup.Item className={'p-1'}>
+                        <InputGroup size="sm">
+                            <Button onClick={() => window.open(`https://pknu.commonscdn.com/contents5/pknu100001/${videoResponse.cid}/contents/media_files/mobile/ssmovie.mp4`)} variant={"outline-secondary"}>Content Video</Button>
+                            <FormControl size={"sm"} disabled
+                                         value={`https://pknu.commonscdn.com/contents5/pknu100001/${videoResponse.cid}/contents/media_files/mobile/ssmovie.mp4`}/>
+                        </InputGroup>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         hisCode: {his.hisCode}<br/>
@@ -102,15 +115,25 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({getSchedule, setModal, modal
     }
     return (
         <>
-            <Card border={"primary"}>
+            <Card border={"dark"}>
+                <Card.Header>
+                    Schedule
+                </Card.Header>
                 <Card.Body>
                     Last updated in {lastUpdated}
                 </Card.Body>
             </Card>
             <Common.Blank/>
+            <ButtonGroup size={"sm"}>
+                <Button disabled={showIncomplete} onClick={toggleIncomplete} variant="outline-dark">Only
+                    Incomplete</Button>
+                <Button disabled={!showIncomplete} onClick={toggleIncomplete} variant="outline-dark">All</Button>
+            </ButtonGroup>
+            <Button onClick={requestGetSchedule} className={'ms-2'} variant="outline-dark" size={"sm"}>Reload</Button>
+            <Common.Blank/>
             {getSchedule.courses.map((v) => (
                 <>
-                    <Card>
+                    <Card border={"dark"}>
                         <Card.Body>
                             <Card.Title>{v.title}</Card.Title>
                             <Card.Text><span className={'text-muted'}>{v.id}</span></Card.Text>
@@ -119,11 +142,11 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({getSchedule, setModal, modal
                             {v.incomplete.map((v, i) => (
                                 <Accordion.Item eventKey={i.toString()}>
                                     <Accordion.Header>
-                                        [{v.seq}] {v.name}
-                                    </Accordion.Header>
+                                        <Badge>{v.edDt}</Badge>
+                                        <div className={'ms-2'}/>
+                                        <span>[{v.seq}] {v.name}</span></Accordion.Header>
                                     <Accordion.Body>
                                         <ListGroup variant={"flush"}>
-                                            <ListGroup.Item>End date: {v.edDt}</ListGroup.Item>
                                             <ListGroup.Item>View state: {v.progressStr}</ListGroup.Item>
                                             <Button className={'mt-3'} onClick={() => showHisModal(v)} size={"sm"}
                                                     variant={"outline-secondary"}>
@@ -139,7 +162,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({getSchedule, setModal, modal
                 </>
             ))}
         </>
-    )
+    );
 }
 
 export default ScheduleForm

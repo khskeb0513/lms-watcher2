@@ -4,6 +4,7 @@ import Schedule from "./schedule";
 import Calendar from "./calendar";
 import Index from "./index";
 import Board from "./board";
+import Attendance from "./attendance";
 
 interface UserProps {
     modal: any,
@@ -24,7 +25,7 @@ const User: React.FC<UserProps> = ({setModal, modal, promiseUsername}) => {
             {username ? (
                 <Switch>
                     {/*
-                    /user/schedule, /user/calendar, /user/board
+                    /user/schedule, /user/calendar, /user/board, /user/attendance
                     */}
                     <Route path={'/user/schedule'}>
                         <Schedule modal={modal} setModal={setModal}/>
@@ -34,6 +35,9 @@ const User: React.FC<UserProps> = ({setModal, modal, promiseUsername}) => {
                     </Route>
                     <Route path={'/user/board'}>
                         <Board modal={modal} setModal={setModal}/>
+                    </Route>
+                    <Route path={'/user/attendance'}>
+                        <Attendance/>
                     </Route>
                     <Route>
                         <Index/>
