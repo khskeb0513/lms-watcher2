@@ -61,7 +61,7 @@ export class ScheduleAPIController {
         @Query("kjKey") kjKey: string,
         @Session() session: Record<string, any>
     ) {
-        return this.scheduleService.issueHisCode(item, seq, kjKey, session.username, session.cookieStr);
+        return this.scheduleService.issueHisCode(item, seq, kjKey, session.cookieStr);
     }
 
     @Get("/requestHisStatus")

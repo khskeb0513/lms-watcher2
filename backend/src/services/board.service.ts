@@ -13,7 +13,7 @@ export class BoardService {
     ) {
     }
 
-    public parseBoard(response: string) {
+    private parseBoard(response: string) {
         const body = cheerio.load(response);
         return body("tbody").children("tr").toArray().map(v => {
             const detail = body(v).find("a.site-link");

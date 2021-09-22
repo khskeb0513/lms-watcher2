@@ -12,7 +12,7 @@ const MyNavbar: React.FC<MyNavbarProps> = ({promiseUsername}) => {
     }, [promiseUsername])
     return (
         <>
-            <Navbar bg="dark" variant="dark" expand={"md"}>
+            <Navbar style={{backgroundColor: '#002A7C'}} variant="dark" expand={"sm"}>
                 <Container>
                     <Navbar.Brand href="/">
                         {process.env.REACT_APP_ENV === 'development' ? 'study1' : 'LMS Watcher'}

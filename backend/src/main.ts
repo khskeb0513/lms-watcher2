@@ -4,6 +4,8 @@ import { join } from "path";
 import * as session from "express-session";
 import { AppModule } from "./app.module";
 import * as admin from "firebase-admin";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -17,6 +19,14 @@ async function bootstrap() {
       saveUninitialized: true
     })
   );
+  const options = new DocumentBuilder()
+      .setTitle('LMS-WATCHER')
+      .setDescription('NOTICE: Use with session ready.')
+      .setVersion('1.0.0')
+      .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api-docs', app, document);
   const port = process.env["PORT"] || 3000;
   await app.listen(port);
 }

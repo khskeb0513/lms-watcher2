@@ -24,8 +24,7 @@ const Login = () => {
     })
     useEffect(() => {
         if (process.env.REACT_APP_ENV === 'development') authService.getSessionFromEnv().then(r => {
-            if (r) window.location.href = '/'
-            else alert('error! check user information')
+            if (!r) alert('error! check user information')
         })
     }, [])
     return (

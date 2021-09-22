@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {Badge, Card, Container, ListGroup} from "react-bootstrap";
+import {Accordion, Badge, Card, Container, ListGroup} from "react-bootstrap";
 import Common from "./common";
 import GetMaterialListProps, {Board} from "../domain/board/getMaterialListProps";
 import BoardService from "../service/boardService";
@@ -60,31 +60,43 @@ const BoardForm: React.FC<BoardFormProps> = ({list, modal, setModal, boardServic
                 </Card.Body>
             </Card>
             <Common.Blank/>
-            {list.map((v) => (
-                <>
-                    <Card border={'dark'}>
-                        <Card.Body>
-                            <Card.Title>{v.title}</Card.Title>
-                            <Card.Text><span className={'text-muted'}>{v.id}</span></Card.Text>
-                        </Card.Body>
-                        <ListGroup variant="flush">
-                            {v.board.map((material, i) => {
-                                const type = material.type === 'material'
-                                return (
-                                    <ListGroup.Item eventKey={i.toString()} action={true}
-                                                    onClick={() => showModal(material, v)}>
-                                        <Badge className={'me-2'} pill bg={type ? 'success' : 'primary'}>
-                                            {type ? '강의자료' : '공지사항'}
-                                        </Badge>
-                                        {material.detail.title}
-                                    </ListGroup.Item>
-                                )
-                            })}
-                        </ListGroup>
-                    </Card>
-                    <Common.Blank/>
-                </>
-            ))}
+            <Accordion>
+                {list.map((v, i) => {
+                    const count = boardService.getCount(v)
+                    return (
+                        <Accordion.Item eventKey={i.toString()}>
+                            <Accordion.Header>
+                                <span className={'me-1'}>{v.title}</span>
+                                <small className={'text-muted me-2'}>{v.id}</small>
+                                {count.material === 0 ? null :
+                                    <Badge className={'me-2'} pill bg={'success'}>
+                                        자료 {count.material}
+                                    </Badge>}
+                                {count.notice === 0 ? null :
+                                    <Badge className={'me-2'} pill bg={'primary'}>
+                                        공지 {count.notice}
+                                    </Badge>}
+                            </Accordion.Header>
+                            <Accordion.Body>
+                                <ListGroup variant="flush">
+                                    {v.board.map((material, i) => {
+                                        const type = material.type === 'material'
+                                        return (
+                                            <ListGroup.Item eventKey={i.toString()} action={true}
+                                                            onClick={() => showModal(material, v)}>
+                                                <Badge className={'me-2'} pill bg={type ? 'success' : 'primary'}>
+                                                    {type ? '강의자료' : '공지사항'}
+                                                </Badge>
+                                                {material.detail.title}
+                                            </ListGroup.Item>
+                                        )
+                                    })}
+                                </ListGroup>
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    )
+                })}
+            </Accordion>
             <Common.Blank/>
         </Container>
     )

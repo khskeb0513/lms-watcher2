@@ -36,14 +36,14 @@ const Schedule: React.FC<ScheduleProps> = ({setModal, modal}) => {
     }
     const requestGetSchedule = () => {
         scheduleService.getSchedule().then(r => {
-            setGetScheduleDto(r)
             if (showIncomplete) {
-                scheduleService.getIncompleteSchedule(getScheduleDto).then(r => {
+                scheduleService.getIncompleteSchedule(r).then(r => {
                     setList(r)
                 })
             } else {
-                setList(getScheduleDto)
+                setList(r)
             }
+            setGetScheduleDto(r)
         })
     }
     return (

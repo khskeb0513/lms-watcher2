@@ -33,7 +33,7 @@ const CalendarForm: React.FC<CalendarFormProps> = ({list, toggleAssignment, show
                     <Accordion flush>
                         {list.map((v, i) => (
                             <Accordion.Item eventKey={i.toString()}>
-                                <Badge bg="primary">{v.searchDate.split(',')[0]}</Badge>
+                                <Badge bg={!v.detail.name && !v.detail.status ? 'primary' : 'success'}>{v.searchDate.split(',')[0]}</Badge>
                                 <Accordion.Header>
                                     <span
                                         style={{

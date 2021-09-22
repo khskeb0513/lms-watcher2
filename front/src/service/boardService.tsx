@@ -1,5 +1,6 @@
 import GetMaterialListDto from '../domain/board/getMaterialListDto'
 import GetMaterialListProps from "../domain/board/getMaterialListProps";
+import {GetMaterialListWithTypeProps} from "../domain/board/getMaterialListWithTypeDto";
 
 interface MaterialAttachment {
     fileUrl: string
@@ -11,7 +12,19 @@ interface GetBodyInterface {
     attachment: MaterialAttachment[]
 }
 
+interface GetCountInterface {
+    material: number
+    notice: number
+}
+
 class BoardService {
+    getCount(list: GetMaterialListWithTypeProps): GetCountInterface {
+        return {
+            material: list.board.filter(value => value.type === 'material').length,
+            notice: list.board.filter(value => value.type === 'notice').length
+        }
+    }
+
     async getMaterialList(): Promise<GetMaterialListDto> {
         const response = await fetch('/api/user/getMaterialList')
         const body: GetMaterialListProps[] = await response.json()

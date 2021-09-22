@@ -45,7 +45,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                 })
             })
         }
-        const makeTimerHisNoti = () => Notification.requestPermission().then(r => {
+        const makeTimerHisNoti = (his: number) => Notification.requestPermission().then(r => {
             if (r === 'granted') {
                 const times = v.progressStr
                     .split('/ ')[1].replace(/[^0-9]/g, ":").split(':').map(v => parseInt(v, 10))
@@ -62,6 +62,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                         image: '/logo512.png',
                         icon: '/logo512.png'
                     })
+                    requestHisStatus(his)
                     notification.onshow = () => {
                         new Audio('/notification.ogg').play()
                     }
@@ -90,15 +91,25 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
                     </ListGroup.Item>
                     <ListGroup.Item className={'p-1'}>
                         <InputGroup size="sm">
-                            <Button onClick={() => window.open(`https://pknu.commonscdn.com/contents5/pknu100001/${videoResponse.cid}/contents/media_files/mobile/ssmovie.mp4`)} variant={"outline-secondary"}>Content Video</Button>
+                            <Button
+                                onClick={() => window.open(`https://pknu.commonscdn.com/contents5/pknu100001/${videoResponse.cid}/contents/media_files/mobile/ssmovie.mp4`)}
+                                variant={"outline-secondary"}>ContentUrl</Button>
                             <FormControl size={"sm"} disabled
                                          value={`https://pknu.commonscdn.com/contents5/pknu100001/${videoResponse.cid}/contents/media_files/mobile/ssmovie.mp4`}/>
+                        </InputGroup>
+                        <InputGroup size="sm" className={'mt-1'}>
+                            <Button
+                                onClick={() => window.open(`https://ucc.pknu.ac.kr/em/${videoResponse.cid}`)}
+                                variant={"outline-secondary"}>ContentVideo</Button>
+                            <FormControl size={"sm"} disabled
+                                         value={`https://ucc.pknu.ac.kr/em/${videoResponse.cid}`}/>
                         </InputGroup>
                     </ListGroup.Item>
                     <ListGroup.Item>
                         hisCode: {his.hisCode}<br/>
                         created: {new Date(his.timestamp).toLocaleString()}<br/>
-                        <Button onClick={makeTimerHisNoti} variant={"outline-dark"} className={'mt-2'} size={"sm"}>
+                        <Button onClick={() => makeTimerHisNoti(his.hisCode)} variant={"outline-dark"}
+                                className={'mt-2'} size={"sm"}>
                             <img src={notificationIcon} alt={'set alarm'} width={18}/>
                         </Button>{' '}
                         <Button onClick={() => requestHisStatus(his.hisCode)} className={'mt-2'}
@@ -131,36 +142,35 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
             </ButtonGroup>
             <Button onClick={requestGetSchedule} className={'ms-2'} variant="outline-dark" size={"sm"}>Reload</Button>
             <Common.Blank/>
-            {getSchedule.courses.map((v) => (
-                <>
-                    <Card border={"dark"}>
-                        <Card.Body>
-                            <Card.Title>{v.title}</Card.Title>
-                            <Card.Text><span className={'text-muted'}>{v.id}</span></Card.Text>
-                        </Card.Body>
-                        <Accordion flush>
+            <Accordion>
+                {getSchedule.courses.map((v, i) => (
+                    <Accordion.Item eventKey={i.toString()}>
+                        <Accordion.Header>
+                            <span className={'me-1'}>{v.title}</span>
+                            <small className={'me-2 text-muted'}>{v.id}</small>
+                            <Badge pill>{v.incomplete.length}</Badge>
+                        </Accordion.Header>
+                        <Accordion.Body>
                             {v.incomplete.map((v, i) => (
-                                <Accordion.Item eventKey={i.toString()}>
-                                    <Accordion.Header>
-                                        <Badge>{v.edDt}</Badge>
-                                        <div className={'ms-2'}/>
-                                        <span>[{v.seq}] {v.name}</span></Accordion.Header>
-                                    <Accordion.Body>
-                                        <ListGroup variant={"flush"}>
-                                            <ListGroup.Item>View state: {v.progressStr}</ListGroup.Item>
-                                            <Button className={'mt-3'} onClick={() => showHisModal(v)} size={"sm"}
-                                                    variant={"outline-secondary"}>
+                                <>
+                                    {i !== 0 ? <Common.Blank/> : null}
+                                    <ListGroup>
+                                        <ListGroup.Item>
+                                            <span><Badge pill>{v.edDt}</Badge>{' '}[{v.seq}] {v.name}</span>
+                                        </ListGroup.Item>
+                                        <ListGroup.Item>
+                                            View state: {v.progressStr}
+                                            <small className={'ms-3 text-muted'} onClick={() => showHisModal(v)}>
                                                 ID: {v.item}
-                                            </Button>
-                                        </ListGroup>
-                                    </Accordion.Body>
-                                </Accordion.Item>
+                                            </small>
+                                        </ListGroup.Item>
+                                    </ListGroup>
+                                </>
                             ))}
-                        </Accordion>
-                    </Card>
-                    <Common.Blank/>
-                </>
-            ))}
+                        </Accordion.Body>
+                    </Accordion.Item>
+                ))}
+            </Accordion>
         </>
     );
 }

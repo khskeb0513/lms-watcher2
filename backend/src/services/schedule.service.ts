@@ -205,9 +205,9 @@ export class ScheduleService {
         itemId,
         week,
         kjKey,
-        ud,
         cookie: string
     ) {
+        const ud = await this.userService.getUsername(cookie)
         const video = await this.sessionService.moveKj(cookie, kjKey) ?
             await this.getVideo(kjKey, week, itemId, cookie) : null;
         const body = await got.post(
@@ -242,7 +242,7 @@ export class ScheduleService {
         if (dbResponse) {
             return dbResponse;
         } else {
-            return await this.issueHisCode(itemId, seq, kjKey, ud, cookie);
+            return await this.issueHisCode(itemId, seq, kjKey, cookie);
         }
     }
 }

@@ -28,6 +28,28 @@ const Account = () => {
         }
     })
     const makeNotification = () => {
+        // navigator.serviceWorker.ready.then(serviceWorker => {
+        //     Notification.requestPermission().then(permission => {
+        //         if (permission === 'granted') {
+        //             if (serviceWorker.showNotification) {
+        //                 serviceWorker.showNotification('test', {
+        //                     data: {
+        //                         type: 'TIMER_SET',
+        //                         payload: {
+        //                             time: 3000
+        //                         }
+        //                     }
+        //                 }).then(() => new Audio('/notification.ogg').play())
+        //             } else {
+        //                 alert('CAUTION: This browser not support Notification.\n' +
+        //                     '주의: 브라우저가 노티피케이션을 지원하지 않습니다.')
+        //             }
+        //         } else {
+        //             alert('CAUTION: User denied Notification permission.\n' +
+        //                 '주의: 사용자가 노티피케이션 권한을 거부하였습니다.')
+        //         }
+        //     })
+        // })
         Notification.requestPermission().then(r => {
             if (r === 'granted') {
                 const notify = new Notification('TEST', {
@@ -79,7 +101,7 @@ const Account = () => {
                             <ListGroup variant={"flush"}>
                                 <ListGroupItem>
                                     <Button variant={"outline-dark"} onClick={makeNotification}>
-                                        Notification Test: check sound, dismiss in 3sec.
+                                        Notification Test: show after 3secs. check sound.
                                     </Button>
                                 </ListGroupItem>
                             </ListGroup>

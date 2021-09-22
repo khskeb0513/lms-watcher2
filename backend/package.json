@@ -22,24 +22,24 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^7.6.15",
-    "@nestjs/core": "^7.6.15",
-    "@nestjs/platform-express": "^7.6.15",
-    "@nestjs/schedule": "^0.4.3",
+    "@nestjs/common": "^8.0.6",
+    "@nestjs/core": "^8.0.6",
+    "@nestjs/platform-express": "^8.0.6",
+    "@nestjs/schedule": "^1.0.1",
     "@nestjs/serve-static": "^2.2.2",
-    "@nestjs/typeorm": "^7.1.5",
+    "@nestjs/swagger": "^5.0.9",
+    "@nestjs/typeorm": "^8.0.2",
     "cheerio": "^1.0.0-rc.6",
     "express-session": "^1.17.1",
     "firebase-admin": "^9.11.0",
     "got": "^11.8.2",
     "hbs": "^4.1.2",
     "moment": "^2.29.1",
-    "mssql": "^7.1.0",
     "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6",
-    "typeorm": "^0.2.34"
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.6.0",
