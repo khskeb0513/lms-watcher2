@@ -13,18 +13,17 @@ import { UserService } from "./services/user.service";
 import { CommonService } from "./services/common.service";
 import { ReportService } from "./services/report.service";
 import { CalendarService } from "./services/calendar.service";
-import { HappyDormService } from './services/happyDorm.service';
-import { HappyDormAPIController } from './controllers/api/happyDormAPI.controller';
-import { BoardAPIController } from './controllers/api/boardAPI.controller';
-import { BoardService } from './services/board.service';
-import {ServeStaticModule} from "@nestjs/serve-static";
-import {join} from "path";
-
+import { HappyDormService } from "./services/happyDorm.service";
+import { HappyDormAPIController } from "./controllers/api/happyDormAPI.controller";
+import { BoardAPIController } from "./controllers/api/boardAPI.controller";
+import { BoardService } from "./services/board.service";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../front/build')
+      rootPath: join(__dirname, "../../front/build")
     })
   ],
   controllers: [
@@ -50,5 +49,4 @@ import {join} from "path";
     BoardService
   ]
 })
-export class AppModule {
-}
+export class AppModule {}

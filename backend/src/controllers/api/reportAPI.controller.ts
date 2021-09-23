@@ -10,10 +10,7 @@ export class ReportAPIController {
     @Query("id") kjKey: string,
     @Session() session: Record<string, any>
   ) {
-    return this.reportService.getByCourseId(
-      kjKey,
-      session.cookieStr
-    );
+    return this.reportService.getByCourseId(kjKey, session.cookieStr);
   }
 
   @Get("/getByCourseIdExceptComplete")

@@ -3,10 +3,7 @@ import { HappyDormService } from "../../services/happyDorm.service";
 
 @Controller("api/happyDorm")
 export class HappyDormAPIController {
-  constructor(
-    private readonly happyDormService: HappyDormService
-  ) {
-  }
+  constructor(private readonly happyDormService: HappyDormService) {}
 
   @Post("/isUser")
   public async isUser(
@@ -20,16 +17,7 @@ export class HappyDormAPIController {
   }
 
   @Get("/getSessionValue")
-  public async getSessionValue(
-    @Session() session: Record<string, any>
-  ) {
+  public async getSessionValue(@Session() session: Record<string, any>) {
     return this.happyDormService.isSessionValid(session.cookieStr);
-  }
-
-  @Get('getFullInformation')
-  public async getFullInformation(
-    @Session() session: Record<string, any>
-  ) {
-    return
   }
 }

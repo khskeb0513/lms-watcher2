@@ -5,8 +5,7 @@ import * as cheerio from "cheerio";
 
 @Injectable()
 export class ReportService {
-  constructor(private readonly sessionService: SessionService) {
-  }
+  constructor(private readonly sessionService: SessionService) {}
 
   public async getByCourseId(id: string, cookie: string) {
     await this.sessionService.moveKj(cookie, id);
@@ -41,10 +40,7 @@ export class ReportService {
       .filter((v) => !!v);
   }
 
-  public async getByCourseIdExceptComplete(
-    id: string,
-    cookie: string
-  ) {
+  public async getByCourseIdExceptComplete(id: string, cookie: string) {
     return (await this.getByCourseId(id, cookie)).filter((v) => {
       return v.submitStatus.includes("미제출");
     });

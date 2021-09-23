@@ -1,3 +1,6 @@
+#CUSTOM
+serviceAccountKey.json
+
 # Project exclude paths
 /dist/
 /node_modules/.idea

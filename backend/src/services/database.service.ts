@@ -3,8 +3,12 @@ import * as admin from "firebase-admin";
 
 @Injectable()
 export class DatabaseService {
-
-  public async setContent(kjKey: string, item: string, cid: string, contentId: string) {
+  public async setContent(
+    kjKey: string,
+    item: string,
+    cid: string,
+    contentId: string
+  ) {
     const db = admin.database();
     const request = await db.ref(`content/${kjKey}/${item}`);
     request.child("/cid").set(cid);
@@ -25,7 +29,8 @@ export class DatabaseService {
       request.child("/hisCode").set(hisCode);
       request.child("/timestamp").set(timestamp);
       return {
-        hisCode, timestamp
+        hisCode,
+        timestamp
       };
     }
   }

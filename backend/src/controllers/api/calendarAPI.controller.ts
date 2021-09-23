@@ -3,8 +3,7 @@ import { CalendarService } from "../../services/calendar.service";
 
 @Controller("api/calendar")
 export class CalendarAPIController {
-  constructor(private readonly calendarService: CalendarService) {
-  }
+  constructor(private readonly calendarService: CalendarService) {}
 
   @Get("/getCalendar")
   public async getCalendar(@Session() session: Record<string, any>) {

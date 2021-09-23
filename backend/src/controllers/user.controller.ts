@@ -3,10 +3,7 @@ import { UserService } from "../services/user.service";
 
 @Controller("ui/user")
 export class UserController {
-  constructor(
-    private readonly userService: UserService
-  ) {
-  }
+  constructor(private readonly userService: UserService) {}
 
   @Get("/requestHisStatus")
   @Render("user/requestHisStatus")
@@ -16,7 +13,12 @@ export class UserController {
     @Query("kjKey") kjKey: string,
     @Session() session: Record<string, any>
   ) {
-    return this.userService.requestHisStatus(item, seq, kjKey, session.cookieStr);
+    return this.userService.requestHisStatus(
+      item,
+      seq,
+      kjKey,
+      session.cookieStr
+    );
   }
 
   @Get("/getIncompleteSchedule")
@@ -35,7 +37,10 @@ export class UserController {
     @Session() session: Record<string, any>
   ) {
     return {
-      courses: !!year && !!term ? await this.userService.getSchedule(session.cookieStr, year, term) : await this.userService.getSchedule(session.cookieStr)
+      courses:
+        !!year && !!term
+          ? await this.userService.getSchedule(session.cookieStr, year, term)
+          : await this.userService.getSchedule(session.cookieStr)
     };
   }
 

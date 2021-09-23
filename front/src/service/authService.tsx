@@ -12,7 +12,9 @@ class AuthService {
 
     async getUsername(): Promise<string> {
         const response = await fetch('/api/user/getUsername')
-        return response.text()
+        return response.text(
+
+        )
     }
 
     async isUser(username: string, password: string): Promise<IsUserDto> {

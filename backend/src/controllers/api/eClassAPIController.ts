@@ -3,12 +3,13 @@ import { EClassService } from "../../services/eClass.service";
 
 @Controller("api/eClass")
 export class EClassAPIController {
-  constructor(private readonly eClassService: EClassService) {
-  }
+  constructor(private readonly eClassService: EClassService) {}
 
   @Get("/getList")
   public getList(
-    @Session() session: Record<string, any>, @Query("year") year: number, @Query("term") term: number
+    @Session() session: Record<string, any>,
+    @Query("year") year: number,
+    @Query("term") term: number
   ) {
     if (!year && !term) {
       return this.eClassService.getList(session.cookieStr);

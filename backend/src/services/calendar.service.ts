@@ -5,7 +5,6 @@ import * as moment from "moment";
 
 @Injectable()
 export class CalendarService {
-
   public async getCalendarByDate(date: string, cookie: string) {
     const body = (
       await got.post(
@@ -20,11 +19,28 @@ export class CalendarService {
     return $("div.schedule-show-control")
       .toArray()
       .map((v) => {
-        const dateStr = $(v).parent().children().last().children().last().text();
-        const title = $(v).text().replace(/ /ig, "").replace(/\n/ig, "");
-        const name = $(v).parent().children().last().children().first().children().first().text()
-          .replace(/ /ig, "").replace(/\n/ig, "");
-        const searchDate = new Date(`${date.substr(0, 4)}-${date.substr(4, 2)}-${date.substr(6, 2)}`);
+        const dateStr = $(v)
+          .parent()
+          .children()
+          .last()
+          .children()
+          .last()
+          .text();
+        const title = $(v).text().replace(/ /gi, "").replace(/\n/gi, "");
+        const name = $(v)
+          .parent()
+          .children()
+          .last()
+          .children()
+          .first()
+          .children()
+          .first()
+          .text()
+          .replace(/ /gi, "")
+          .replace(/\n/gi, "");
+        const searchDate = new Date(
+          `${date.substr(0, 4)}-${date.substr(4, 2)}-${date.substr(6, 2)}`
+        );
         if (dateStr.length === 23) {
           const [startDateStr, endDateStr] = dateStr.split(" ~ ");
           return {
@@ -38,9 +54,27 @@ export class CalendarService {
             }
           };
         } else {
-          const status = $(v).parent().children().last().children().first().text()
-            .replace(/ /ig, '').replace(/\n/ig, "");
-          const submitDate = $($(v).parent().children().last().children().first().children().toArray()[1]).text().replace("마감일 : ", "");
+          const status = $(v)
+            .parent()
+            .children()
+            .last()
+            .children()
+            .first()
+            .text()
+            .replace(/ /gi, "")
+            .replace(/\n/gi, "");
+          const submitDate = $(
+            $(v)
+              .parent()
+              .children()
+              .last()
+              .children()
+              .first()
+              .children()
+              .toArray()[1]
+          )
+            .text()
+            .replace("마감일 : ", "");
           return {
             title,
             searchDate,
@@ -48,7 +82,11 @@ export class CalendarService {
             startDate: searchDate,
             endDate: searchDate,
             detail: {
-              status: status.includes("상태") ? (status.includes("미제출") ? "미제출" : "제출") : null,
+              status: status.includes("상태")
+                ? status.includes("미제출")
+                  ? "미제출"
+                  : "제출"
+                : null,
               name
             }
           };
@@ -60,23 +98,26 @@ export class CalendarService {
 
   public async getCalendar(cookie: string) {
     const request = async (month: number) => {
-      const body = (await got.post(
-        "https://lms.pknu.ac.kr/ilos/main/main_schedule.acl",
-        {
+      const body = (
+        await got.post("https://lms.pknu.ac.kr/ilos/main/main_schedule.acl", {
           headers: { cookie },
           searchParams: { month }
-        }
-      )).body;
+        })
+      ).body;
       const $ = cheerio.load(body);
       const children = [];
       for (let i = 1; i < 32; i++) {
         const schoolSchedule = $(`#${month}_${i}_0`).length !== 0;
         const courseSchedule = $(`#${month}_${i}_1`).length !== 0;
         if (schoolSchedule || courseSchedule) {
-          (await this.getCalendarByDate(
-            `2021${month.toString().length === 1 ? `0${month}` : month}${i.toString().length === 1 ? `0${i}` : i}`,
-            cookie
-          )).forEach(v => {
+          (
+            await this.getCalendarByDate(
+              `2021${month.toString().length === 1 ? `0${month}` : month}${
+                i.toString().length === 1 ? `0${i}` : i
+              }`,
+              cookie
+            )
+          ).forEach((v) => {
             children.push(v);
           });
         }
@@ -84,18 +125,18 @@ export class CalendarService {
       return children;
     };
     return [
-      ...await request(1),
-      ...await request(2),
-      ...await request(3),
-      ...await request(4),
-      ...await request(5),
-      ...await request(6),
-      ...await request(7),
-      ...await request(8),
-      ...await request(9),
-      ...await request(10),
-      ...await request(11),
-      ...await request(12)
+      ...(await request(1)),
+      ...(await request(2)),
+      ...(await request(3)),
+      ...(await request(4)),
+      ...(await request(5)),
+      ...(await request(6)),
+      ...(await request(7)),
+      ...(await request(8)),
+      ...(await request(9)),
+      ...(await request(10)),
+      ...(await request(11)),
+      ...(await request(12))
     ];
   }
 

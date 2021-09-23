@@ -1,7 +1,5 @@
 export default class IsUserResponseDto {
-  constructor(
-    isUser: boolean
-  ) {
+  constructor(isUser: boolean) {
     this.isUser = isUser;
   }
 
